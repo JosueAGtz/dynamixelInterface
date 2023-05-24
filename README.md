@@ -4,7 +4,9 @@ The Dynamixel Interface is a board that allows easy communication with a MCU or 
 ![dinamixelInterface_Board](https://github.com/JosueAGtz/dynamixelInterface/blob/main/Images/dInterfaceBoard.png)
 
 ## Dynamixel Interface Wiring 
-![dinamixelInterface_Wiring](https://github.com/JosueAGtz/dynamixelInterface/blob/main/Images/Dynamixel%20Interface%20Diagram.png)
+![dinamixelInterface_Wiring](https://github.com/JosueAGtz/dynamixelInterface/blob/main/Images/Dynamixel%20Interface%20Diagram%205V.png)
+
+![dinamixelInterface_Wiring](https://github.com/JosueAGtz/dynamixelInterface/blob/main/Images/Dynamixel%20Interface%20Diagram%203V3.png)
 
 ## Dynamixel Interface Features and Pinout
 ![dinamixelInterface_Specs](https://github.com/JosueAGtz/dynamixelInterface/blob/main/Images/dInterface_Specs.png)
