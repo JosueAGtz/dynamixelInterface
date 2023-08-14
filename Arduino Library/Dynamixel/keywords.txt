@@ -15,12 +15,12 @@ setBaudRate           	KEYWORD2
 move             	KEYWORD2
 moveSpeed       	KEYWORD2
 setEndless      	KEYWORD2
-turn            	KEYWORD2
+setRotation            	KEYWORD2
 moveRW           	KEYWORD2
 moveSpeedRW     	KEYWORD2
 action          	KEYWORD2
-torqueStatus    	KEYWORD2	
-ledStatus       	KEYWORD2
+setTorque    		KEYWORD2	
+setLED       		KEYWORD2
 setTempLimit    	KEYWORD2
 setCWAngleLimit   	KEYWORD2
 setCCWAngleLimit   	KEYWORD2
@@ -34,8 +34,8 @@ setCMargin         	KEYWORD2
 setCSlope          	KEYWORD2
 setPunch           	KEYWORD2
 moving            	KEYWORD2
-lockRegister       	KEYWORD2
-RWStatus        	KEYWORD2
+setLockRegister       	KEYWORD2
+readRWStatus        	KEYWORD2
 readSpeed        	KEYWORD2
 readLoad            	KEYWORD2
 readPosition    	KEYWORD2
@@ -43,12 +43,13 @@ readTemperature 	KEYWORD2
 readVoltage     	KEYWORD2
 readModel     		KEYWORD2
 mapMotorModel     	KEYWORD2
+mapMotorError		KEYWORD2
 readRegisterData 	KEYWORD2
 readFirmware     	KEYWORD2	
 setProtocol     	KEYWORD2
-driveMode	     	KEYWORD2
-operationMode     	KEYWORD2
-profileVelocity     	KEYWORD2
+setDriveMode	     	KEYWORD2
+setOperationMode     	KEYWORD2
+setProfileVelocity     	KEYWORD2
 readCurrent     	KEYWORD2
 readPWM		     	KEYWORD2
 
@@ -56,6 +57,10 @@ setGoalPWM		KEYWORD2
 setGoalCurrent		KEYWORD2
 setGoalVelocity		KEYWORD2
 setGoalPosition		KEYWORD2
+
+setRegisterByte 	KEYWORD2
+setRegisterShort 	KEYWORD2
+setRegisterLong 	KEYWORD2
 
 # Constants (LITERAL1)
 

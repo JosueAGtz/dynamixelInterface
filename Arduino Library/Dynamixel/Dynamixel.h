@@ -61,6 +61,11 @@
  			- Se agrega funcion profile Velocity
  			- Se agrega funcion operation Mode
  			- Se actualizan definiciones de registros Dynamixel
+            - Se agrega funcion de mapeo de Modelo
+            - Se agrega funcuon de mapeo de Hardware Error
+
+ 22/06/2023
+            - Se agrega compatibilidad con Software Serial
 
  SUPPORTED DEVICES:
 
@@ -396,7 +401,10 @@
 #define UNLOCK                      0
 #define LOCK                        1
 
-#define DELAY_TX_TIME               240
+#define DELAY_TX_TIME_MIN           0
+#define DELAY_TX_TIME_MAX           320
+#define DELAY_TX_TIME_OFFSET        15
+#define DELAY_TX_TIME_MULTP         1600
 #define TIME_COUNTER_DELAY          600
 #define TIME_OUT                    10
 
@@ -411,14 +419,16 @@
 
 #include <inttypes.h>
 #include <HardwareSerial.h>
+//#include <SoftwareSerial.h>
 
 class DynamixelClass {
 private:
 
-	HardwareSerial *serialPort;
-    
+//SoftwareSerial *softwareSerialPort;
+HardwareSerial *serialPort;
+
+    unsigned int timeDelay;
     unsigned int  serialBufferLenght;
-	
     unsigned char directionPin;
 	unsigned char protocolVersion;
 	unsigned char registerLowByte;
@@ -437,29 +447,31 @@ private:
 	unsigned char parameter3;
 	unsigned char parameter4;
 	unsigned char checkSum; 
+
 	  
     int readRegister(unsigned char registerLenght, unsigned char returnValue);
 	int readRegister(unsigned char registerLenght);  
 	int readError(void);
 	
-public:
-
-	void begin(HardwareSerial *sPort, long bRate, unsigned char dPin, unsigned char pVersion);
-	void begin(HardwareSerial *sPort, long bRate, unsigned char dPin);
-	void begin(HardwareSerial *sPort, long bRate);
-	void setProtocol(unsigned char pVersion);
+public: 
+    
+    //void begin(SoftwareSerial *sPort, long bRate, unsigned char dPin, unsigned char pVersion);
+    void begin(HardwareSerial *sPort, long bRate, unsigned char dPin, unsigned char pVersion);
+	void setProtocolVersion(unsigned char pVersion);
 	void end(void);
 	
 	int reset(unsigned char motorID, unsigned char resetMode);
 	int reset(unsigned char motorID);
 	int ping(unsigned char motorID); 
+
+    void action(void);
 	
 	int setID(unsigned char motorID, unsigned char newID);
 	int setBaudRate(unsigned char motorID, long bRate);
 	
-	int driveMode(unsigned char motorID, unsigned char driveMode);
-	int operationMode(unsigned char motorID, unsigned char operationMode);
-	int profileVelocity(unsigned char motorID, int profileVelocity);
+	int setDriveMode(unsigned char motorID, unsigned char driveMode);
+	int setOperationMode(unsigned char motorID, unsigned char operationMode);
+	int setProfileVelocity(unsigned char motorID, int profileVelocity);
 
     int setGoalPWM(unsigned char motorID, int motorPWM);
     int setGoalCurrent(unsigned char motorID, int motorCurrent);
@@ -468,10 +480,10 @@ public:
 
 	int move(unsigned char motorID, int motorPosition);
 	int moveSpeed(unsigned char motorID, int motorPosition, int motorSpeed);
+    int moveRW(unsigned char motorID, int motorPosition);
+    int moveSpeedRW(unsigned char motorID, int motorPosition, int motorSpeed);
 	int setEndless(unsigned char motorID,bool motorMode);
-	int turn(unsigned char motorID, bool turnDirection, int motorSpeed);
-	int moveRW(unsigned char motorID, int motorPosition);
-	int moveSpeedRW(unsigned char motorID, int motorPosition, int motorSpeed);
+	int setRotation(unsigned char motorID, bool turnDirection, int motorSpeed);
 	
 	int setTempLimit(unsigned char motorID, unsigned char motorTemperature);
 	int setCWAngleLimit(unsigned char motorID, int motorCWLimit);
@@ -496,13 +508,16 @@ public:
 	int readModel(unsigned char motorID);
 	int readFirmware(unsigned char motorID);
 	
-	void action(void);
-	int moving(unsigned char motorID);
-	int RWStatus(unsigned char motorID);
+	int readMovingStatus(unsigned char motorID);
+	int readRWStatus(unsigned char motorID);
 
-	int torqueStatus(unsigned char motorID, bool torqueStatus);
-	int lockRegister(unsigned char motorID, bool lockStatus);
-	int ledStatus(unsigned char motorID, bool ledStatus);
+    int setLockRegister(unsigned char motorID, bool lockStatus);
+	int setTorque(unsigned char motorID, bool torqueStatus);
+	int setLED(unsigned char motorID, bool ledStatus);
+
+    int setRegisterByte(unsigned char motorID, unsigned char registerAddress, unsigned char registerByte);
+    int setRegisterShort(unsigned char motorID, unsigned char registerAddress, unsigned short registerBytes);
+    int setRegisterLong(unsigned char motorID, unsigned char registerAddress, unsigned long registerBytes);
 
     int readRegisterData(unsigned char motorID, unsigned char registerAddress, unsigned char registerBytes);
 
