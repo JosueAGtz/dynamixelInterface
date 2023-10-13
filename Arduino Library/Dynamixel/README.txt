@@ -5,9 +5,7 @@ Contact: Savage Electronics - Electronics For Everyone
   E-mail: Josue.Gutierrez@savageelectronics.com 
   Web:    https://www.savageelectrtonics.com
 
-Version: Dynamixel Library 08/07/2019 GPL v2.1
-
- Dynamixel Serial Version 1.4.0
+Version: Dynamixel Library 0.4.1 GPL v2.1
 
 Requeriments:
 
@@ -47,42 +45,5 @@ License:
  You should have received a copy of the GNU Lesser General Public
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-ChangeLog:
-
- 25/07/2011 - Eliminado la modificacion serial para ser modificada dentro del mismo Hardware Serial.
- 25/07/2011 - Modificado la funcion setBD() para aceptar todas la velocidades sin PDF.
- 25/07/2011 - Agregada la funcion de Rotacion Continua.
- 26/07/2011 - Agregada la funcion begin sin seteo de Direction_Pin.
- 25/07/2011 - Agregada la funcion Reset.
- 26/07/2011 - Agregada la funcion Reg_Write en move y moveSpeed.
- 26/07/2011 - Agregada la funcion Action.
- 13/12/2011 - Arreglado el manejo y envio de variables.
- 22/12/2011 - Compatible con la actualizacion Arduino 1.0.
- 10/01/2012 - Utilizacion de Macros y eliminacion codigo no necesario.
- 11/01/2012 - Agregadas las funciones:
-              int setTempLimit(unsigned char ID, unsigned char Temperature);
-              int setAngleLimit(unsigned char ID, int CWLimit, int CCWLimit);
-              int setVoltageLimit(unsigned char ID, unsigned char DVoltage, unsigned char UVoltage);
-              int setMaxTorque(unsigned char ID, int MaxTorque);
-              int setSRL(unsigned char ID, unsigned char SRL);
-              int setRDT(unsigned char ID, unsigned char RDT);
-              int setLEDAlarm(unsigned char ID, unsigned char LEDAlarm);
-              int setShutdownAlarm(unsigned char ID, unsigned char SALARM);
-              int setCMargin(unsigned char ID, unsigned char CWCMargin, unsigned char CCWCMargin);
-              int setCSlope(unsigned char ID, unsigned char CWCSlope, unsigned char CCWCSlope);
-15/01/2012 - Agregadas las funciones:
-              int setPunch(unsigned char ID, int Punch);
-              int moving(unsigned char ID);
-              int lockRegister(unsigned char ID);
-              int RWStatus(unsigned char ID);
-              int readSpeed(unsigned char ID);
-              int readLoad(unsigned char ID);
-08/07/2019
-	   - Se unifican todas las variantes de las bibliotecas en una sola.	
-
- TODO:
- 
- Dynamixel protocol 2.0
 
 ******************************************************************************************

@@ -417,6 +417,69 @@
 #define ANGLE_LIMIT_ERROR			0x02	
 #define INPUT_VOLTAGE_ERROR			0x01
 
+
+        // HiWonder-LewanSoul ///////////////////////////////////////////////////////////////
+
+#define LX_START_BYTE               85     
+
+#define LX_MOVETIME_WR              1
+#define LX_MOVETIME_RD              2
+#define LX_MOVETIME_WAIT_WR         7
+#define LX_MOVETIME_WAIT_RD         8
+#define LX_MOVE_START               11
+#define LX_MOVE_STOP                12
+#define LX_ID_WR                    13
+#define LX_ID_RD                    14
+#define LX_ANGLEOFFSET_ADJ          17
+#define LX_ANGLEOFFSET_WR           18
+#define LX_ANGLEOFFSET_RD           19
+#define LX_ANGLELIMIT_WR            20
+#define LX_ANGLELIMIT_RD            21
+#define LX_VINLIMIT_WR              22
+#define LX_VINLIMIT_RD              23
+#define LX_TEMPLIMIT_WR             24
+#define LX_TEMPLIMIT_RD             25
+#define LX_TEMP_RD                  26
+#define LX_VIN_RD                   27
+#define LX_POS_RD                   28
+#define LX_MODE_WR                  29
+#define LX_MODE_RD                  30
+#define LX_LOAD_WR                  31
+#define LX_LOAD_RD                  32
+#define LX_LED_WR                   33
+#define LX_LED_RD                   34
+#define LX_ERRORLED_WR              35
+#define LX_ERRORLED_RD              36
+
+#define LX_MOVETIME_WR_LENGHT              7
+#define LX_MOVETIME_RD_LENGHT              3
+#define LX_MOVETIME_WAIT_WR_LENGHT         7
+#define LX_MOVETIME_WAIT_RD_LENGHT         3
+#define LX_MOVE_START_LENGHT               3
+#define LX_MOVE_STOP_LENGHT                3
+#define LX_ID_WR_LENGHT                    4
+#define LX_ID_RD_LENGHT                    3
+#define LX_ANGLEOFFSET_ADJ_LENGHT          4
+#define LX_ANGLEOFFSET_WR_LENGHT           3
+#define LX_ANGLEOFFSET_RD_LENGHT           3
+#define LX_ANGLELIMIT_WR_LENGHT            7
+#define LX_ANGLELIMIT_RD_LENGHT            3
+#define LX_VINLIMIT_WR_LENGHT              7
+#define LX_VINLIMIT_RD_LENGHT              3
+#define LX_TEMPLIMIT_WR_LENGHT             4
+#define LX_TEMPLIMIT_RD_LENGHT             3
+#define LX_TEMP_RD_LENGHT                  3
+#define LX_VIN_RD_LENGHT                   3
+#define LX_POS_RD_LENGHT                   3
+#define LX_MODE_WR_LENGHT                  7
+#define LX_MODE_RD_LENGHT                  3
+#define LX_LOAD_WR_LENGHT                  4
+#define LX_LOAD_RD_LENGHT                  3
+#define LX_LED_WR_LENGHT                   4
+#define LX_LED_RD_LENGHT                   3
+#define LX_ERRORLED_WR_LENGHT              4
+#define LX_ERRORLED_RD_LENGHT              3
+
 #include <inttypes.h>
 #include <HardwareSerial.h>
 //#include <SoftwareSerial.h>
@@ -449,9 +512,11 @@ HardwareSerial *serialPort;
 	unsigned char checkSum; 
 
 	  
-    int readRegister(unsigned char registerLenght, unsigned char returnValue);
-	int readRegister(unsigned char registerLenght);  
-	int readError(void);
+    short readRegister(unsigned char registerLenght, unsigned char returnValue);
+	short readRegister(unsigned char registerLenght);  
+	short readError(void);
+
+    short LXreadRegister(unsigned char registerLenght);  
 	
 public: 
     
@@ -460,69 +525,75 @@ public:
 	void setProtocolVersion(unsigned char pVersion);
 	void end(void);
 	
-	int reset(unsigned char motorID, unsigned char resetMode);
-	int reset(unsigned char motorID);
-	int ping(unsigned char motorID); 
+	short reset(unsigned char motorID, unsigned char resetMode);
+	short reset(unsigned char motorID);
+	short ping(unsigned char motorID); 
 
     void action(void);
 	
-	int setID(unsigned char motorID, unsigned char newID);
-	int setBaudRate(unsigned char motorID, long bRate);
+	short setID(unsigned char motorID, unsigned char newID);
+	short setBaudRate(unsigned char motorID, long bRate);
 	
-	int setDriveMode(unsigned char motorID, unsigned char driveMode);
-	int setOperationMode(unsigned char motorID, unsigned char operationMode);
-	int setProfileVelocity(unsigned char motorID, int profileVelocity);
+	short setDriveMode(unsigned char motorID, unsigned char driveMode);
+	short setOperationMode(unsigned char motorID, unsigned char operationMode);
+	short setProfileVelocity(unsigned char motorID, short profileVelocity);
 
-    int setGoalPWM(unsigned char motorID, int motorPWM);
-    int setGoalCurrent(unsigned char motorID, int motorCurrent);
-    int setGoalVelocity(unsigned char motorID, int motorVelocity);
-    int setGoalPosition(unsigned char motorID, int motorPosition);
+    short setGoalPWM(unsigned char motorID, short motorPWM);
+    short setGoalCurrent(unsigned char motorID, short motorCurrent);
+    short setGoalVelocity(unsigned char motorID, short motorVelocity);
+    short setGoalPosition(unsigned char motorID, short motorPosition);
 
-	int move(unsigned char motorID, int motorPosition);
-	int moveSpeed(unsigned char motorID, int motorPosition, int motorSpeed);
-    int moveRW(unsigned char motorID, int motorPosition);
-    int moveSpeedRW(unsigned char motorID, int motorPosition, int motorSpeed);
-	int setEndless(unsigned char motorID,bool motorMode);
-	int setRotation(unsigned char motorID, bool turnDirection, int motorSpeed);
+	short move(unsigned char motorID, short motorPosition);
+	short moveSpeed(unsigned char motorID, short motorPosition, short motorSpeed);
+    short moveRW(unsigned char motorID, short motorPosition);
+    short moveSpeedRW(unsigned char motorID, short motorPosition, short motorSpeed);
+	short setEndless(unsigned char motorID,bool motorMode);
+	short setRotation(unsigned char motorID, bool turnDirection, short motorSpeed);
 	
-	int setTempLimit(unsigned char motorID, unsigned char motorTemperature);
-	int setCWAngleLimit(unsigned char motorID, int motorCWLimit);
-	int setCCWAngleLimit(unsigned char motorID, int motorCCWLimit);
-	int setVoltageLimit(unsigned char motorID, unsigned char minVoltage, unsigned char maxVoltage);
-	int setMaxTorque(unsigned char motorID, int maxTorque);
-	int setSRL(unsigned char motorID, unsigned char motorSRL);
-	int setRDT(unsigned char motorID, unsigned char motorRDT);
-	int setLEDAlarm(unsigned char motorID, unsigned char ledAlarm);
-	int setShutdownAlarm(unsigned char motorID, unsigned char motorAlarm);
-	int setCMargin(unsigned char motorID, unsigned char CWCMargin, unsigned char CCWCMargin);
-	int setCSlope(unsigned char motorID, unsigned char CWCSlope, unsigned char CCWCSlope);
-	int setPunch(unsigned char motorID, int motorPunch);
+	short setTempLimit(unsigned char motorID, unsigned char motorTemperature);
+	short setCWAngleLimit(unsigned char motorID, short motorCWLimit);
+	short setCCWAngleLimit(unsigned char motorID, short motorCCWLimit);
+	short setVoltageLimit(unsigned char motorID, unsigned char minVoltage, unsigned char maxVoltage);
+	short setMaxTorque(unsigned char motorID, short maxTorque);
+	short setSRL(unsigned char motorID, unsigned char motorSRL);
+	short setRDT(unsigned char motorID, unsigned char motorRDT);
+	short setLEDAlarm(unsigned char motorID, unsigned char ledAlarm);
+	short setShutdownAlarm(unsigned char motorID, unsigned char motorAlarm);
+	short setCMargin(unsigned char motorID, unsigned char CWCMargin, unsigned char CCWCMargin);
+	short setCSlope(unsigned char motorID, unsigned char CWCSlope, unsigned char CCWCSlope);
+	short setPunch(unsigned char motorID, short motorPunch);
 	
-	int readTemperature(unsigned char motorID);
-	int readVoltage(unsigned char motorID);
-	int readPosition(unsigned char motorID);
-	int readSpeed(unsigned char motorID);
-	int readLoad(unsigned char motorID);
-	int readCurrent(unsigned char motorID);
-	int readPWM(unsigned char motorID);
-	int readModel(unsigned char motorID);
-	int readFirmware(unsigned char motorID);
+	short readTemperature(unsigned char motorID);
+	short readVoltage(unsigned char motorID);
+	short readPosition(unsigned char motorID);
+	short readSpeed(unsigned char motorID);
+	short readLoad(unsigned char motorID);
+	short readCurrent(unsigned char motorID);
+	short readPWM(unsigned char motorID);
+	short readModel(unsigned char motorID);
+	short readFirmware(unsigned char motorID);
 	
-	int readMovingStatus(unsigned char motorID);
-	int readRWStatus(unsigned char motorID);
+	short readMovingStatus(unsigned char motorID);
+	short readRWStatus(unsigned char motorID);
 
-    int setLockRegister(unsigned char motorID, bool lockStatus);
-	int setTorque(unsigned char motorID, bool torqueStatus);
-	int setLED(unsigned char motorID, bool ledStatus);
+    short setLockRegister(unsigned char motorID, bool lockStatus);
+	short setTorque(unsigned char motorID, bool torqueStatus);
+	short setLED(unsigned char motorID, bool ledStatus);
 
-    int setRegisterByte(unsigned char motorID, unsigned char registerAddress, unsigned char registerByte);
-    int setRegisterShort(unsigned char motorID, unsigned char registerAddress, unsigned short registerBytes);
-    int setRegisterLong(unsigned char motorID, unsigned char registerAddress, unsigned long registerBytes);
+    short setRegisterByte(unsigned char motorID, unsigned char registerAddress, unsigned char registerByte);
+    short setRegisterShort(unsigned char motorID, unsigned char registerAddress, unsigned short registerBytes);
+    short setRegisterLong(unsigned char motorID, unsigned char registerAddress, unsigned long registerBytes);
 
-    int readRegisterData(unsigned char motorID, unsigned char registerAddress, unsigned char registerBytes);
+    short readRegisterData(unsigned char motorID, unsigned char registerAddress, unsigned char registerBytes);
 
-    const char* mapMotorModel(int motorModelNumber);
-    const char* mapMotorError(int motorError);
+    short LXmoveTime(unsigned char motorID, unsigned short positionBytes, unsigned short timeBytes);
+
+    short LXreadPosition(unsigned char motorID);
+    short LXreadVoltage(unsigned char motorID);
+    short LXreadTemperature(unsigned char motorID);
+
+    const char* mapMotorModel(short motorModelNumber);
+    const char* mapMotorError(short motorError);
 };
 
 extern DynamixelClass Dynamixel;
