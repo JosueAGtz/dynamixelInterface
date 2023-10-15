@@ -5,7 +5,7 @@ Contact: Savage Electronics - Electronics For Everyone
   E-mail: Josue.Gutierrez@savageelectronics.com 
   Web:    https://www.savageelectrtonics.com
 
-Version: Dynamixel Library 0.4.1 GPL v2.1
+Version: Dynamixel Library 0.4.2 GPL v2.1
 
 Requeriments:
 
