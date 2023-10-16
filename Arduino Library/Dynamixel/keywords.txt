@@ -45,7 +45,12 @@ readModel     		KEYWORD2
 mapMotorModel     	KEYWORD2
 mapMotorError		KEYWORD2
 readRegisterData 	KEYWORD2
-readFirmware     	KEYWORD2	
+readFirmware     	KEYWORD2
+readCurrentLimit	KEYWORD2
+readPWMLimit		KEYWORD2
+readVelocityLimit	KEYWORD2
+readMaxPositionLimit	KEYWORD2
+readMinPositionLimit	KEYWORD2	
 setProtocol     	KEYWORD2
 setDriveMode	     	KEYWORD2
 setOperationMode     	KEYWORD2
