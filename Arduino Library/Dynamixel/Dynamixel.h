@@ -1,5 +1,5 @@
 /*
- Dynamixel.cpp - Ax-12+ Half Duplex USART Comunication
+ Dynamixel.cpp - Half Duplex USART Comunication
  Copyright (c) 2011 Savage Electronics.
  Created by Josue Alejandro Gutierrez on 27/01/11.
  
@@ -18,54 +18,14 @@
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  
  *****************************************************************************
- Modifications:
- 
- 25/07/2011 - Eliminado la modificacion serial para ser modificada dentro del mismo Hardware Serial.
- 25/07/2011 - Modificado la funcion setBD() para aceptar todas la velocidades sin PDF.
- 25/07/2011 - Agregada la funcion de Rotacion Continua.
- 26/07/2011 - Agregada la funcion begin sin seteo de Direction_Pin.
- 25/07/2011 - Agregada la funcion Reset.
- 26/07/2011 - Agregada la funcion Reg_Write en move y moveSpeed.
- 26/07/2011 - Agregada la funcion Action.
- 13/12/2011 - Arreglado el manejo y envio de variables.
- 22/12/2011 - Compatible con la actualizacion Arduino 1.0.
- 10/01/2012 - Utilizacion de Macros y eliminacion codigo no necesario.
- 11/01/2012 - Agregadas las funciones:
-              int setTempLimit(unsigned char ID, unsigned char Temperature);
-              int setAngleLimit(unsigned char ID, int CWLimit, int CCWLimit);
-              int setVoltageLimit(unsigned char ID, unsigned char DVoltage, unsigned char UVoltage);
-			  int setMaxTorque(unsigned char ID, int MaxTorque);
-              int setSRL(unsigned char ID, unsigned char SRL);
-              int setRDT(unsigned char ID, unsigned char RDT);
-              int setLEDAlarm(unsigned char ID, unsigned char LEDAlarm);
-              int setShutdownAlarm(unsigned char ID, unsigned char SALARM);
-              int setCMargin(unsigned char ID, unsigned char CWCMargin, unsigned char CCWCMargin);
-			  int setCSlope(unsigned char ID, unsigned char CWCSlope, unsigned char CCWCSlope);
- 15/01/2012 - Agregadas las funciones:             
-              int setPunch(unsigned char ID, int Punch);
-              int moving(unsigned char ID);
-              int lockRegister(unsigned char ID);
-			  int RWStatus(unsigned char ID);
-              int readSpeed(unsigned char ID);
-              int readLoad(unsigned char ID);
- 08/07/2019
-			- Se unifican todas las variantes de la biblioteca en una sola
-			- Se agrega funcion de reset general
- 
- 08/12/2022 - Se actualiza nombre de la biblioteca
- 			- Se agrega funcion de lectura de registros
- 			- Se corrige funcion CWLimit CCWLimit VoltageLimit
- 			- Se agrega definicion de errores del protocolo V1
- 			- Se agrega funcion transmision/recepcion dinamica
- 			- Se agrega compatibilidad con protocolo 2.0
- 			- Se agrega funcion profile Velocity
- 			- Se agrega funcion operation Mode
- 			- Se actualizan definiciones de registros Dynamixel
-            - Se agrega funcion de mapeo de Modelo
-            - Se agrega funcuon de mapeo de Hardware Error
 
- 22/06/2023
-            - Se agrega compatibilidad con Software Serial
+ Library Version: 0.4.2 - 10/16/23
+
+ Last Update on 16-OCT-2023
+            - Added compatibility with Software Serial
+            - Added support for Serial Bus servos (FeeTech/Waveshare y Hiwonder)
+            - Added read Instructions for Current, PWM and Velocity
+            - Datatype corrections
 
  SUPPORTED DEVICES:
 
@@ -362,6 +322,7 @@
 #define RIGTH                       1
 #define AX_BYTE_READ                1
 #define AX_BYTE_READ_POS            2
+#define AX_BYTE_READ_TRQ            2
 #define AX_RESET_LENGTH				2
 #define AX_ACTION_LENGTH			2
 #define AX_ID_LENGTH                4
@@ -536,17 +497,17 @@ public:
 	
 	short setDriveMode(unsigned char motorID, unsigned char driveMode);
 	short setOperationMode(unsigned char motorID, unsigned char operationMode);
-	short setProfileVelocity(unsigned char motorID, short profileVelocity);
+	short setProfileVelocity(unsigned char motorID, int profileVelocity);
 
     short setGoalPWM(unsigned char motorID, short motorPWM);
     short setGoalCurrent(unsigned char motorID, short motorCurrent);
-    short setGoalVelocity(unsigned char motorID, short motorVelocity);
-    short setGoalPosition(unsigned char motorID, short motorPosition);
+    short setGoalVelocity(unsigned char motorID, int motorVelocity);
+    short setGoalPosition(unsigned char motorID, int motorPosition);
 
-	short move(unsigned char motorID, short motorPosition);
-	short moveSpeed(unsigned char motorID, short motorPosition, short motorSpeed);
-    short moveRW(unsigned char motorID, short motorPosition);
-    short moveSpeedRW(unsigned char motorID, short motorPosition, short motorSpeed);
+	short move(unsigned char motorID, int motorPosition);
+	short moveSpeed(unsigned char motorID, int motorPosition, int motorSpeed);
+    short moveRW(unsigned char motorID, int motorPosition);
+    short moveSpeedRW(unsigned char motorID, int motorPosition, int motorSpeed);
 	short setEndless(unsigned char motorID,bool motorMode);
 	short setRotation(unsigned char motorID, bool turnDirection, short motorSpeed);
 	
@@ -565,13 +526,18 @@ public:
 	
 	short readTemperature(unsigned char motorID);
 	short readVoltage(unsigned char motorID);
-	short readPosition(unsigned char motorID);
-	short readSpeed(unsigned char motorID);
+	int readPosition(unsigned char motorID);
+	int readSpeed(unsigned char motorID);
 	short readLoad(unsigned char motorID);
 	short readCurrent(unsigned char motorID);
 	short readPWM(unsigned char motorID);
 	short readModel(unsigned char motorID);
 	short readFirmware(unsigned char motorID);
+    short readCurrentLimit(unsigned char motorID);
+    short readPWMLimit(unsigned char motorID);
+    int readVelocityLimit(unsigned char motorID);
+    int readMaxPositionLimit(unsigned char motorID);
+    int readMinPositionLimit(unsigned char motorID);
 	
 	short readMovingStatus(unsigned char motorID);
 	short readRWStatus(unsigned char motorID);
