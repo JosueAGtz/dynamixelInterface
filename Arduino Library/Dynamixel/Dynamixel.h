@@ -473,8 +473,8 @@ HardwareSerial *serialPort;
 	unsigned char checkSum; 
 
 	  
-    short readRegister(unsigned char registerLenght, unsigned char returnValue);
-	short readRegister(unsigned char registerLenght);  
+    long readRegister(unsigned char registerLenght, unsigned char returnValue);
+	long readRegister(unsigned char registerLenght);  
 	short readError(void);
 
     short LXreadRegister(unsigned char registerLenght);  
@@ -497,17 +497,17 @@ public:
 	
 	short setDriveMode(unsigned char motorID, unsigned char driveMode);
 	short setOperationMode(unsigned char motorID, unsigned char operationMode);
-	short setProfileVelocity(unsigned char motorID, int profileVelocity);
+	short setProfileVelocity(unsigned char motorID, long profileVelocity);
 
     short setGoalPWM(unsigned char motorID, short motorPWM);
     short setGoalCurrent(unsigned char motorID, short motorCurrent);
-    short setGoalVelocity(unsigned char motorID, int motorVelocity);
-    short setGoalPosition(unsigned char motorID, int motorPosition);
+    short setGoalVelocity(unsigned char motorID, long motorVelocity);
+    short setGoalPosition(unsigned char motorID, long motorPosition);
 
-	short move(unsigned char motorID, int motorPosition);
-	short moveSpeed(unsigned char motorID, int motorPosition, int motorSpeed);
-    short moveRW(unsigned char motorID, int motorPosition);
-    short moveSpeedRW(unsigned char motorID, int motorPosition, int motorSpeed);
+	short move(unsigned char motorID, long motorPosition);
+	short moveSpeed(unsigned char motorID, long motorPosition, long motorSpeed);
+    short moveRW(unsigned char motorID, long motorPosition);
+    short moveSpeedRW(unsigned char motorID, long motorPosition, long motorSpeed);
 	short setEndless(unsigned char motorID,bool motorMode);
 	short setRotation(unsigned char motorID, bool turnDirection, short motorSpeed);
 	
@@ -526,8 +526,8 @@ public:
 	
 	short readTemperature(unsigned char motorID);
 	short readVoltage(unsigned char motorID);
-	int readPosition(unsigned char motorID);
-	int readSpeed(unsigned char motorID);
+	long readPosition(unsigned char motorID);
+	long readSpeed(unsigned char motorID);
 	short readLoad(unsigned char motorID);
 	short readCurrent(unsigned char motorID);
 	short readPWM(unsigned char motorID);
@@ -535,15 +535,17 @@ public:
 	short readFirmware(unsigned char motorID);
     short readCurrentLimit(unsigned char motorID);
     short readPWMLimit(unsigned char motorID);
-    int readVelocityLimit(unsigned char motorID);
-    int readMaxPositionLimit(unsigned char motorID);
-    int readMinPositionLimit(unsigned char motorID);
+    long readVelocityLimit(unsigned char motorID);
+    long readMaxPositionLimit(unsigned char motorID);
+    long readMinPositionLimit(unsigned char motorID);
 	
 	short readMovingStatus(unsigned char motorID);
 	short readRWStatus(unsigned char motorID);
+    short readTorque(unsigned char motorID);
 
     short setLockRegister(unsigned char motorID, bool lockStatus);
 	short setTorque(unsigned char motorID, bool torqueStatus);
+    short setTorqueMode(unsigned char motorID, bool torqueStatus);
 	short setLED(unsigned char motorID, bool ledStatus);
 
     short setRegisterByte(unsigned char motorID, unsigned char registerAddress, unsigned char registerByte);
@@ -553,7 +555,6 @@ public:
     short readRegisterData(unsigned char motorID, unsigned char registerAddress, unsigned char registerBytes);
 
     short LXmoveTime(unsigned char motorID, unsigned short positionBytes, unsigned short timeBytes);
-
     short LXreadPosition(unsigned char motorID);
     short LXreadVoltage(unsigned char motorID);
     short LXreadTemperature(unsigned char motorID);

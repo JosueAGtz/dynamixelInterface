@@ -88,9 +88,11 @@ const char motorModel[50][12] = {"RX-10","AX-12A","AX-18A","RX-24","RX-28","MX-2
                                 "XW540-T140","XL330-M077","XL330-M288","XC330-T181","XC330-T288","XC330-M181","XC330-M288",
                                 "XW430-T333","XW430-T200"};
 
-unsigned short motorStandardErrors[8] = {0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80};
+unsigned short motorP1Errors[15] = {0x00,0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,0x03,0x05,0x06,0x07,0x09,0x0A};
+unsigned short motorP2Errors[8] = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07};
 
-const char motorErrorList[8][20] = {"VOLTAGE ERROR","ANGLE ERROR","OVERHEATING ERROR","RANGE ERROR","CHECKSUM ERROR","OVERLOAD ERROR","INSTRUCTION ERROR","NO RESPONSE"};
+const char motorP1ErrorList[15][25] = {"OK","VOLTAGE ERROR","ANGLE ERROR","OVERHEAT ERROR","RANGE ERROR","CHECKSUM ERROR","OVERLOAD ERROR","INSTRUCTION ERROR","NO RESPONSE","VLT & ANGL","VLT & OVHT","ANGL & OVHT","VLT, ANGL & OVHT","VLT & RNG","ANGL & RNG"};
+const char motorP2ErrorList[8][25] = {"OK","PROCESS ERROR","INSTRUCTION ERROR","CRC ERROR","RANGE ERROR","LENGTH ERROR","LIMIT ERROR","ACCESS ERROR"};
 
 
 // Private Methods //////////////////////////////////////////////////////////////
@@ -136,9 +138,9 @@ unsigned short generateCRC(unsigned char *dataPacket, unsigned short packetSize)
 	return crc;
 }
 
-short DynamixelClass::readRegister(unsigned char registerLenght)
+long DynamixelClass::readRegister(unsigned char registerLenght)
 {
-	short registerValue = -1;
+	long registerValue = -1;
 	if (protocolVersion == 2){
 		unsigned short timeCounter = 0;
 		while( (availableData() < (11 + registerLenght)) && (timeCounter < TIME_OUT) ){
@@ -217,7 +219,7 @@ short DynamixelClass::readRegister(unsigned char registerLenght)
 
 short DynamixelClass::LXreadRegister(unsigned char registerLenght)
 {
-		short registerValue = -1;
+		long registerValue = -1;
 		unsigned short timeCounter = 0;
 		while( (availableData() <  (6 + registerLenght)) && (timeCounter < TIME_OUT) ){
 			timeCounter++;
@@ -251,9 +253,9 @@ short DynamixelClass::LXreadRegister(unsigned char registerLenght)
 
 
 
-short DynamixelClass::readRegister(unsigned char registerLenght, unsigned char returnValue)
+long DynamixelClass::readRegister(unsigned char registerLenght, unsigned char returnValue)
 {
-	short registerValue = -1;
+	long registerValue = -1;
 	if (protocolVersion == 2){
 		unsigned short timeCounter = 0;
 		while( (availableData() < (11 + registerLenght)) && (timeCounter < TIME_OUT) ){
@@ -680,7 +682,7 @@ short DynamixelClass::setOperationMode(unsigned char motorID, unsigned char  ope
     return (readError());                 
 }
 
-short DynamixelClass::setProfileVelocity(unsigned char motorID, int profileVelocity)
+short DynamixelClass::setProfileVelocity(unsigned char motorID, long profileVelocity)
 {
 		unsigned char velocityByte1H = profileVelocity >> 24; 
 		unsigned char velocityByte1L = profileVelocity >> 16; 
@@ -776,7 +778,7 @@ short DynamixelClass::setGoalCurrent(unsigned char motorID, short motorCurrent){
 	return (readError()); 
 }
 
-short DynamixelClass::setGoalVelocity(unsigned char motorID, int motorVelocity)
+short DynamixelClass::setGoalVelocity(unsigned char motorID, long motorVelocity)
 {
 	unsigned char velocityByte1H = motorVelocity >> 24; 
 	unsigned char velocityByte1L = motorVelocity >> 16; 
@@ -811,10 +813,10 @@ short DynamixelClass::setGoalVelocity(unsigned char motorID, int motorVelocity)
 	return (readError()); 
 }
 
-short DynamixelClass::setGoalPosition(unsigned char motorID, int motorPosition){
+short DynamixelClass::setGoalPosition(unsigned char motorID, long motorPosition){
 
-	unsigned char positionByte1H = motorPosition >> 24;           
-    unsigned char positionByte1L = motorPosition >> 16;
+	unsigned char positionByte1L = motorPosition >> 24;           
+    unsigned char positionByte1H = motorPosition >> 16;
 	unsigned char positionByteH = motorPosition >> 8;           
     unsigned char positionByteL = motorPosition;
 	
@@ -863,7 +865,7 @@ short DynamixelClass::setGoalPosition(unsigned char motorID, int motorPosition){
 }
 
 
-short DynamixelClass::move(unsigned char motorID, int motorPosition)
+short DynamixelClass::move(unsigned char motorID, long motorPosition)
 {
 		unsigned char positionByte1H = motorPosition >> 24;
 		unsigned char positionByte1L = motorPosition >> 16;
@@ -913,7 +915,7 @@ short DynamixelClass::move(unsigned char motorID, int motorPosition)
     return (readError());                 
 }
 
-short DynamixelClass::moveSpeed(unsigned char motorID, int motorPosition, int motorSpeed)
+short DynamixelClass::moveSpeed(unsigned char motorID, long motorPosition, long motorSpeed)
 {
 	short instructionError1 = 0, instructionError2 = 0;
 	if (protocolVersion == 2){
@@ -943,7 +945,7 @@ short DynamixelClass::moveSpeed(unsigned char motorID, int motorPosition, int mo
 	return (readError() | instructionError1 | instructionError2);  
 }
 
-short DynamixelClass::moveRW(unsigned char motorID, int motorPosition)
+short DynamixelClass::moveRW(unsigned char motorID, long motorPosition)
 {
     unsigned char positionByteH = motorPosition >> 8;           // 16 bits - 2 x 8 bits variables
     unsigned char positionByteL = motorPosition;
@@ -963,7 +965,7 @@ short DynamixelClass::moveRW(unsigned char motorID, int motorPosition)
     return (readError());                 
 }
 
-short DynamixelClass::moveSpeedRW(unsigned char motorID, int motorPosition, int motorSpeed)
+short DynamixelClass::moveSpeedRW(unsigned char motorID, long motorPosition, long motorSpeed)
 {
     unsigned char positionByteH = motorPosition >> 8;    
     unsigned char positionByteL = motorPosition;                // 16 bits - 2 x 8 bits variables
@@ -1107,6 +1109,47 @@ short DynamixelClass::setTorque( unsigned char motorID, bool torqueStatus)
     	sendData(AX_TORQUE_LENGTH);
     	sendData(AX_WRITE_DATA);
     	sendData(AX_TORQUE_ENABLE);
+    	sendData(torqueStatus);
+    	sendData(checksum);
+    	while(availableWrite() != serialBufferLenght);delayus(timeDelay);
+		switchCom(directionPin,RX_MODE);
+    }
+    return (readError());              
+}
+
+short DynamixelClass::setTorqueMode( unsigned char motorID, bool torqueStatus)
+{
+	if (protocolVersion == 2){
+		unsigned char dataPacket[11] = {DNMXL_H1,DNMXL_H2,DNMXL_H3,DNMXL_RSVD,motorID,DNMXL_WRITE6_LENGTH_LOW,DNMXL_WRITE6_LENGTH_HIGH,
+									   DNMXL_WRITE,DNMXL_TRQ_REG_LOW,DNMXL_TRQ_REG_HIGH,torqueStatus};
+    	unsigned short crcBytes = generateCRC(dataPacket,11);
+    	unsigned char  crcLowByte = (crcBytes & 0x00FF);
+    	unsigned char  crcHighByte = (crcBytes >> 8) & 0x00FF;
+		switchCom(directionPin,TX_MODE);
+	    sendData(DNMXL_H1);
+	    sendData(DNMXL_H2);
+		sendData(DNMXL_H3);
+		sendData(DNMXL_RSVD);
+		sendData(motorID);
+		sendData(DNMXL_WRITE6_LENGTH_LOW);
+		sendData(DNMXL_WRITE6_LENGTH_HIGH);
+		sendData(DNMXL_WRITE);
+		sendData(DNMXL_TRQ_REG_LOW);
+		sendData(DNMXL_TRQ_REG_HIGH);
+		sendData(torqueStatus);
+		sendData(crcLowByte);
+		sendData(crcHighByte);
+		while(availableWrite() != serialBufferLenght);delayus(timeDelay);
+		switchCom(directionPin,RX_MODE);
+	} else if (protocolVersion == 1){
+    	unsigned char checksum = (~(motorID + AX_TORQUE_LENGTH + AX_WRITE_DATA + MX_TORQUE_CTRL_MODE_EN + torqueStatus))&0xFF;
+		switchCom(directionPin,TX_MODE);
+    	sendData(AX_START);              
+    	sendData(AX_START);
+    	sendData(motorID);
+    	sendData(AX_TORQUE_LENGTH);
+    	sendData(AX_WRITE_DATA);
+    	sendData(MX_TORQUE_CTRL_MODE_EN);
     	sendData(torqueStatus);
     	sendData(checksum);
     	while(availableWrite() != serialBufferLenght);delayus(timeDelay);
@@ -1627,6 +1670,48 @@ short DynamixelClass::readRWStatus(unsigned char motorID)
     return (readRegister(1)); 
 }
 
+short DynamixelClass::readTorque(unsigned char motorID)
+{	
+	if (protocolVersion == 2){
+		unsigned char dataPacket[12] = {DNMXL_H1,DNMXL_H2,DNMXL_H3,DNMXL_RSVD,motorID,DNMXL_READ7_LENGTH_LOW,DNMXL_READ7_LENGTH_HIGH,
+									   DNMXL_READ,DNMXL_TRQ_REG_LOW,DNMXL_TRQ_REG_HIGH,DNMXL_DATA1_LOW,DNMXL_DATA1_HIGH,};
+    	unsigned short crcBytes = generateCRC(dataPacket,12);
+    	unsigned char  crcLowByte = (crcBytes & 0x00FF);
+    	unsigned char  crcHighByte = (crcBytes >> 8) & 0x00FF;
+		switchCom(directionPin,TX_MODE);
+	    sendData(DNMXL_H1);
+	    sendData(DNMXL_H2);
+		sendData(DNMXL_H3);
+		sendData(DNMXL_RSVD);
+		sendData(motorID);
+		sendData(DNMXL_READ7_LENGTH_LOW);
+		sendData(DNMXL_READ7_LENGTH_HIGH);
+		sendData(DNMXL_READ);
+		sendData(DNMXL_TRQ_REG_LOW);
+		sendData(DNMXL_TRQ_REG_HIGH);
+		sendData(DNMXL_DATA1_LOW);
+		sendData(DNMXL_DATA1_HIGH);
+		sendData(crcLowByte);
+		sendData(crcHighByte);
+		while(availableWrite() != serialBufferLenght);delayus(timeDelay);
+		switchCom(directionPin,RX_MODE); 
+	} else if (protocolVersion == 1){ 
+    	unsigned char checksum = (~(motorID + AX_RWS_LENGTH  + AX_READ_DATA + AX_TORQUE_ENABLE + AX_BYTE_READ))&0xFF;
+		switchCom(directionPin,TX_MODE);
+    	sendData(AX_START);
+    	sendData(AX_START);
+    	sendData(motorID);
+    	sendData(AX_RWS_LENGTH);
+    	sendData(AX_READ_DATA);
+    	sendData(AX_TORQUE_ENABLE);
+    	sendData(AX_BYTE_READ);
+    	sendData(checksum);
+    	while(availableWrite() != serialBufferLenght);delayus(timeDelay);
+		switchCom(directionPin,RX_MODE);
+	}
+    return (readRegister(1)); 
+}
+
 short DynamixelClass::readTemperature(unsigned char motorID)
 {	
 	if (protocolVersion == 2){
@@ -1669,7 +1754,7 @@ short DynamixelClass::readTemperature(unsigned char motorID)
 	return (readRegister(1));      
 }
 
-int DynamixelClass::readPosition(unsigned char motorID)
+long DynamixelClass::readPosition(unsigned char motorID)
 {	
 	if (protocolVersion == 2){
 		unsigned char dataPacket[12] = {DNMXL_H1,DNMXL_H2,DNMXL_H3,DNMXL_RSVD,motorID,DNMXL_READ7_LENGTH_LOW,DNMXL_READ7_LENGTH_HIGH,
@@ -1753,7 +1838,7 @@ short DynamixelClass::readVoltage(unsigned char motorID)
 	return (readRegister(1*protocolVersion));
 }
 
-int DynamixelClass::readSpeed(unsigned char motorID)
+long DynamixelClass::readSpeed(unsigned char motorID)
 {	
 	if (protocolVersion == 2){
 		unsigned char dataPacket[12] = {DNMXL_H1,DNMXL_H2,DNMXL_H3,DNMXL_RSVD,motorID,DNMXL_READ7_LENGTH_LOW,DNMXL_READ7_LENGTH_HIGH,
@@ -1839,28 +1924,43 @@ short DynamixelClass::readLoad(unsigned char motorID)
 
 short DynamixelClass::readCurrent(unsigned char motorID)
 {	
-	unsigned char dataPacket[12] = {DNMXL_H1,DNMXL_H2,DNMXL_H3,DNMXL_RSVD,motorID,DNMXL_READ7_LENGTH_LOW,DNMXL_READ7_LENGTH_HIGH,
+	if (protocolVersion == 2){
+		unsigned char dataPacket[12] = {DNMXL_H1,DNMXL_H2,DNMXL_H3,DNMXL_RSVD,motorID,DNMXL_READ7_LENGTH_LOW,DNMXL_READ7_LENGTH_HIGH,
 								   DNMXL_READ,DNMXL_CURRENT_REG_LOW,DNMXL_CURRENT_REG_HIGH,DNMXL_DATA2_LOW,DNMXL_DATA2_HIGH,};
-    unsigned short crcBytes = generateCRC(dataPacket,12);
-    unsigned char  crcLowByte = (crcBytes & 0x00FF);
-    unsigned char  crcHighByte = (crcBytes >> 8) & 0x00FF;
-	switchCom(directionPin,TX_MODE);
-	sendData(DNMXL_H1);
-	sendData(DNMXL_H2);
-	sendData(DNMXL_H3);
-	sendData(DNMXL_RSVD);
-	sendData(motorID);
-	sendData(DNMXL_READ7_LENGTH_LOW);
-	sendData(DNMXL_READ7_LENGTH_HIGH);
-	sendData(DNMXL_READ);
-	sendData(DNMXL_CURRENT_REG_LOW);
-	sendData(DNMXL_CURRENT_REG_HIGH);
-	sendData(DNMXL_DATA2_LOW);
-	sendData(DNMXL_DATA2_HIGH);
-	sendData(crcLowByte);
-	sendData(crcHighByte);
-	while(availableWrite() != serialBufferLenght);delayus(timeDelay);
-	switchCom(directionPin,RX_MODE);
+   		unsigned short crcBytes = generateCRC(dataPacket,12);
+    	unsigned char  crcLowByte = (crcBytes & 0x00FF);
+    	unsigned char  crcHighByte = (crcBytes >> 8) & 0x00FF;
+		switchCom(directionPin,TX_MODE);
+		sendData(DNMXL_H1);
+		sendData(DNMXL_H2);
+		sendData(DNMXL_H3);
+		sendData(DNMXL_RSVD);
+		sendData(motorID);
+		sendData(DNMXL_READ7_LENGTH_LOW);
+		sendData(DNMXL_READ7_LENGTH_HIGH);
+		sendData(DNMXL_READ);
+		sendData(DNMXL_CURRENT_REG_LOW);
+		sendData(DNMXL_CURRENT_REG_HIGH);
+		sendData(DNMXL_DATA2_LOW);
+		sendData(DNMXL_DATA2_HIGH);
+		sendData(crcLowByte);
+		sendData(crcHighByte);
+		while(availableWrite() != serialBufferLenght);delayus(timeDelay);
+		switchCom(directionPin,RX_MODE);
+	} else if (protocolVersion == 1){  
+		unsigned char checksum = (~(motorID + AX_POS_LENGTH  + AX_READ_DATA + MX_CURRENT + AX_BYTE_READ_POS))&0xFF;
+		switchCom(directionPin,TX_MODE);
+    	sendData(AX_START);
+    	sendData(AX_START);
+    	sendData(motorID);
+    	sendData(AX_POS_LENGTH);
+    	sendData(AX_READ_DATA);
+    	sendData(MX_CURRENT);
+    	sendData(AX_BYTE_READ_POS);
+    	sendData(checksum);
+    	while(availableWrite() != serialBufferLenght);delayus(timeDelay);
+		switchCom(directionPin,RX_MODE);
+	}
 	return (readRegister(2)); 
 }
 
@@ -2045,7 +2145,7 @@ short DynamixelClass::readPWMLimit(unsigned char motorID)
 	return (readRegister(2));      
 }
 
-int DynamixelClass::readVelocityLimit(unsigned char motorID)
+long DynamixelClass::readVelocityLimit(unsigned char motorID)
 {	
 	unsigned char dataPacket[12] = {DNMXL_H1,DNMXL_H2,DNMXL_H3,DNMXL_RSVD,motorID,DNMXL_READ7_LENGTH_LOW,DNMXL_READ7_LENGTH_HIGH,
 								   DNMXL_READ,DNMXL_VLCTYLIMIT_REG_LOW,DNMXL_VLCTYLIMIT_REG_HIGH,DNMXL_DATA4_LOW,DNMXL_DATA4_HIGH,};
@@ -2073,7 +2173,7 @@ int DynamixelClass::readVelocityLimit(unsigned char motorID)
 	return (readRegister(4));      
 }
 
-int DynamixelClass::readMaxPositionLimit(unsigned char motorID)
+long DynamixelClass::readMaxPositionLimit(unsigned char motorID)
 {	
 	unsigned char dataPacket[12] = {DNMXL_H1,DNMXL_H2,DNMXL_H3,DNMXL_RSVD,motorID,DNMXL_READ7_LENGTH_LOW,DNMXL_READ7_LENGTH_HIGH,
 								   DNMXL_READ,DNMXL_MAXPOSLIMIT_REG_LOW,DNMXL_MAXPOSLIMIT_REG_HIGH,DNMXL_DATA4_LOW,DNMXL_DATA4_HIGH,};
@@ -2101,7 +2201,7 @@ int DynamixelClass::readMaxPositionLimit(unsigned char motorID)
 	return (readRegister(4));      
 }
 
-int DynamixelClass::readMinPositionLimit(unsigned char motorID)
+long DynamixelClass::readMinPositionLimit(unsigned char motorID)
 {	
 	unsigned char dataPacket[12] = {DNMXL_H1,DNMXL_H2,DNMXL_H3,DNMXL_RSVD,motorID,DNMXL_READ7_LENGTH_LOW,DNMXL_READ7_LENGTH_HIGH,
 								   DNMXL_READ,DNMXL_MINPOSLIMIT_REG_LOW,DNMXL_MINPOSLIMIT_REG_HIGH,DNMXL_DATA4_LOW,DNMXL_DATA4_HIGH,};
@@ -2322,11 +2422,18 @@ const char* DynamixelClass::mapMotorModel(short motorModelNumber)
 
 const char* DynamixelClass::mapMotorError(short motorError)
 {
-	for(short i = 0; i < 8; i++){
-		if(abs(motorError) == motorStandardErrors[i])
-			return motorErrorList[i];
+	if(protocolVersion == 1){
+		for(short i = 0; i < 15; i++){
+	 		if(abs(motorError) == motorP1Errors[i])
+	 			return motorP1ErrorList[i];
+	 	}
+	} else {
+		for(short i = 0; i < 8; i++){
+	 		if(abs(motorError) == motorP2Errors[i])
+	 			return motorP2ErrorList[i];
+	 	}
 	}
-	return "Error: 0x";
+	return "SEVERAL ERRORS";
 }
 
 
