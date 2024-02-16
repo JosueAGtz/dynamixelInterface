@@ -1,5 +1,7 @@
 # Dynamixel Interface
-The Dynamixel Interface is a board that allows easy communication with a MCU or Processor with a simple UART module, the board integrates a voltage level converter and a Tri-state buffer to accomplish a good communication between a Dynamixel servomotor and almost any microcontroller in the market.The board is breadboard friendly and development ready as the connection pins are 0.1" standard pitch and the castellated holes for SMD mounting.
+The Dynamixel Interface is a board that allows easy communication with an MCU or Processor with a simple UART module, the board integrates a voltage level converter and a Tri-state buffer to accomplish good communication between a Dynamixel servomotor and almost any microcontroller in the market. The board is breadboard-friendly and development-ready as the connection pins are 0.1" standard pitch and the castellated holes for SMD mounting.
+
+Get the assembled interface on my Tindie Store: https://www.tindie.com/products/savageelectronics/dynamixel-interface/
 
 ![dinamixelInterface_Board](https://github.com/JosueAGtz/dynamixelInterface/blob/main/Images/dInterfaceBoard.png)
 
@@ -11,7 +13,7 @@ The Dynamixel Interface is a board that allows easy communication with a MCU or 
 ## Dynamixel Interface Features and Pinout
 ![dinamixelInterface_Specs](https://github.com/JosueAGtz/dynamixelInterface/blob/main/Images/dInterface_Specs.png)
 
-## Dynamixel Interface Dimmensions
+## Dynamixel Interface Dimensions
 ![dinamixelInterface_Dimmensions](https://github.com/JosueAGtz/dynamixelInterface/blob/main/Images/dInterface_Dimmensions.png)
 
 
