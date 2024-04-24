@@ -5,7 +5,7 @@
 #define DXL_PROTOCOL    1
 #define DXL_DIR_PIN     37
 
-#define AX12RESOLUTION  1023
+#define DYNARESOLUTION  1023
 #define MAXPOSITION     800
 #define MINPOSITION     200
 #define OFFSET          10
@@ -24,6 +24,14 @@ void setup() {
 
   Dynamixel.begin(&dxlSerial, DXL_BAUDRATE, DXL_DIR_PIN, DXL_PROTOCOL);
   delay(1000);
+
+  if (DXL_PROTOCOL == 2) {
+    Dynamixel.setTorque( DXL_ID, OFF);
+    Dynamixel.setOperationMode(DXL_ID, POSITION_CTRL);
+    Dynamixel.setProfileVelocity(DXL_ID, 0);
+    Dynamixel.setTorque( DXL_ID, ON);
+  }
+  
   Dynamixel.move(DXL_ID, MINPOSITION);
 }
 
@@ -33,7 +41,7 @@ void loop() {
   motorModel = Dynamixel.mapMotorModel((Dynamixel.readModel(DXL_ID)));
 
   Serial.print(motorModel);
-  Serial.print(" -> Position: "); Serial.print((Position * 360) / AX12RESOLUTION);
+  Serial.print(" -> Position: "); Serial.print((Position * 360) / DYNARESOLUTION);
   Serial.println("°.");
 
   if ((Dynamixel.readPosition(DXL_ID) > MAXPOSITION - OFFSET) && (Dynamixel.readPosition(DXL_ID) < MAXPOSITION + OFFSET))
